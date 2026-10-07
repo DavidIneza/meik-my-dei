@@ -1,0 +1,833 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#174b32">
+<link rel="manifest" href="manifest.webmanifest">
+<title>Meik My Dei — Class 9C Timetable</title>
+<style>
+@import url("https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@500;600;700;800&display=swap");
+:root{
+  --green-950:#071b11; --green-900:#103b28; --green-800:#174b32;
+  --green-700:#216342; --green-500:#45c777; --green-300:#9be3b3;
+  --cream:#07140d; --card:rgba(16,38,26,.88); --text:#eef8f0;
+  --muted:#a9b9ae; --border:rgba(155,227,179,.15); --shadow:0 20px 60px rgba(0,0,0,.35);
+  --hero-image:url("https://cdn.magicdecor.in/com/2023/02/29205117/image-1686123301-2300.jpg");
+  --table-image:url("https://w0.peakpx.com/wallpaper/800/4/HD-wallpaper-nature-branches-grass-green-spring-summer-trees.jpg");
+}
+body:before{
+  content:"";position:fixed;inset:0;z-index:-2;pointer-events:none;
+  background-image:linear-gradient(rgba(7,27,17,.10),rgba(7,27,17,.10)),
+    url("https://t4.ftcdn.net/jpg/03/76/96/55/360_F_376965594_ChrglgrICleyWhVVG34STjEDWUy6gE8i.jpg");
+  background-size:cover;background-position:center;opacity:.18;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;font-family:"DM Sans",ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  color:var(--text);background:var(--cream);transition:.25s ease;
+}
+button,input,select{font:inherit}
+button{cursor:pointer}
+.nav{
+  position:sticky;top:0;z-index:50;display:flex;align-items:center;justify-content:space-between;
+  padding:14px 5vw;background:rgba(7,27,17,.82);backdrop-filter:blur(18px);color:white;
+}
+.brand{font-family:"Manrope",sans-serif;font-weight:800;letter-spacing:.02em}
+.navlinks{display:flex;gap:8px}
+.navlinks button,.settings-btn{
+  border:0;background:transparent;color:white;padding:10px 14px;border-radius:999px;
+}
+.navlinks button.active,.navlinks button:hover,.settings-btn:hover{background:rgba(255,255,255,.14)}
+.hero{
+  min-height:72vh;position:relative;display:grid;align-items:end;overflow:hidden;
+  background-image:linear-gradient(90deg,rgba(7,27,17,.83),rgba(16,59,40,.34)),var(--hero-image);
+  background-size:cover;background-position:center;
+}
+.hero:after{content:"";position:absolute;inset:0;background:linear-gradient(0deg,rgba(7,27,17,.8),transparent 55%)}
+.hero-content{position:relative;z-index:1;max-width:1100px;width:90%;margin:0 auto;padding:90px 0 70px;color:white}
+.eyebrow{font-weight:800;text-transform:uppercase;letter-spacing:.14em;font-size:.78rem;color:#bcebc9}
+.hero h1{font-size:clamp(3rem,8vw,7rem);line-height:.9;margin:14px 0 22px;max-width:850px}
+.hero p{max-width:650px;font-size:1.1rem;line-height:1.7;color:#e5f4e9}
+.container{width:min(1180px,90%);margin:auto}
+main{padding:42px 0 80px}
+.quick{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:-70px;position:relative;z-index:5}
+.card{
+  background:var(--card);border:1px solid var(--border);box-shadow:var(--shadow);
+  border-radius:28px;padding:24px;backdrop-filter:blur(18px);
+}
+.quick .card{min-height:150px}
+.label{font-size:.75rem;text-transform:uppercase;letter-spacing:.12em;font-weight:800;color:var(--muted)}
+.value{font-size:1.45rem;font-weight:850;margin-top:10px}
+.section-head{display:flex;justify-content:space-between;align-items:end;gap:20px;margin:70px 0 22px}
+.section-head h2{font-size:2.3rem;margin:0}
+.week-badge{display:inline-block;font-size:.72rem;vertical-align:middle;letter-spacing:.08em;
+background:var(--green-500);color:#071b11;padding:7px 11px;border-radius:999px;margin-left:8px}
+.section-head p{color:var(--muted);margin:0}
+.days{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px}
+.days button{
+  border:1px solid var(--border);background:var(--card);color:var(--text);
+  padding:11px 17px;border-radius:999px;font-weight:800;
+}
+.days button.current-today{background:var(--green-700);color:white;border-color:var(--green-700)}
+.days button.day-selected{outline:2px solid var(--green-300);outline-offset:2px}
+.days button.current-today.day-selected{outline-color:#dff8e7}
+.timetable-wrap{
+  position:relative;overflow:hidden;border-radius:34px;padding:22px;
+  background-image:linear-gradient(rgba(7,27,17,.74),rgba(16,59,40,.82)),var(--table-image);
+  background-size:cover;background-position:center;box-shadow:var(--shadow);
+}
+.schedule{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:15px}
+.lesson{
+  position:relative;padding:22px;border-radius:24px;border:1px solid rgba(255,255,255,.2);
+  background:rgba(13,31,21,.92);color:#eef8f0;transition:.28s ease;outline:none;
+}
+.lesson:hover,.lesson.selected,.lesson:focus-visible{
+  transform:translateY(-5px) scale(1.025);box-shadow:0 20px 45px rgba(0,0,0,.22);z-index:3;
+}
+.schedule:has(.lesson:hover) .lesson:not(:hover),
+.schedule:has(.lesson.selected) .lesson:not(.selected){filter:blur(2.2px);opacity:.32;transform:scale(.985)}
+.lesson-time{font-weight:850;color:var(--green-300);font-size:.9rem}
+.lesson h3{margin:8px 0 4px;font-size:1.3rem}
+.lesson-details{max-height:0;overflow:hidden;opacity:0;transition:.3s ease}
+.lesson.selected .lesson-details,.lesson:hover .lesson-details{max-height:160px;opacity:1;margin-top:12px}
+.break{background:rgba(37,61,45,.9);color:#c6d8ca}
+.profile{display:grid;grid-template-columns:280px 1fr;gap:25px}
+.avatar{
+  width:150px;height:150px;border-radius:50%;object-fit:cover;border:5px solid var(--green-500);
+  display:block;margin:5px auto 20px;background:var(--green-300);
+}
+.profile input,.settings select{
+  width:100%;padding:13px 14px;border:1px solid var(--border);border-radius:14px;
+  background:var(--card);color:var(--text);outline:none;
+}
+.save-btn{
+  border:0;background:var(--green-700);color:white;padding:12px 18px;border-radius:14px;font-weight:800;margin-top:12px;
+}
+.full-timetable-btn{display:block;margin:16px auto 0;min-width:190px}
+.mini-avatar{width:34px;height:34px;border-radius:50%;object-fit:cover;vertical-align:middle;margin-right:6px}
+.toast{
+  position:fixed;right:20px;bottom:20px;z-index:100;max-width:360px;
+  padding:17px 19px;border-radius:18px;background:var(--green-950);color:white;
+  box-shadow:0 20px 50px rgba(0,0,0,.28);transform:translateY(130%);transition:.35s ease;
+}
+.toast.show{transform:translateY(0)}
+.modal-backdrop{
+  position:fixed;inset:0;background:rgba(0,0,0,.52);backdrop-filter:blur(7px);
+  display:none;align-items:center;justify-content:center;z-index:90;padding:20px;
+}
+ .modal-backdrop.open{display:flex}
+.notification-confirm{width:min(440px,100%);background:linear-gradient(145deg,#0b2417,#123c28);color:var(--text);border:1px solid rgba(155,227,179,.18);border-radius:26px;padding:28px;box-shadow:0 30px 80px rgba(0,0,0,.45)}
+.notification-confirm h3{font-family:"Manrope",sans-serif;font-size:1.45rem;margin:0 0 10px}
+.notification-confirm p{font-size:.84rem;line-height:1.55;color:var(--muted);margin:0}
+.notification-confirm-actions{display:flex;justify-content:flex-end;gap:10px;margin-top:22px;flex-wrap:wrap}
+.notification-confirm-actions button{border:0;border-radius:14px;padding:11px 17px;font-weight:800}
+.notification-cancel{background:rgba(255,255,255,.09);color:var(--text)}
+.notification-disable{background:var(--green-700);color:#fff}
+.settings{width:min(500px,100%);background:var(--cream);color:var(--text);border-radius:28px;padding:28px;box-shadow:var(--shadow)}
+.settings-row{display:flex;justify-content:space-between;align-items:center;gap:20px;padding:17px 0;border-bottom:1px solid var(--border)}
+.settings-row:last-child{border-bottom:0}
+.settings select{width:190px}
+.close-btn{border:0;background:transparent;color:var(--text);font-size:1.5rem}
+.switch{width:52px;height:30px;position:relative}
+.switch input{display:none}
+.slider{position:absolute;inset:0;border-radius:30px;background:#9aa69d;cursor:pointer}
+.slider:before{content:"";position:absolute;width:24px;height:24px;left:3px;top:3px;background:white;border-radius:50%;transition:.2s}
+.switch input:checked+.slider{background:var(--green-500)}
+.switch input:checked+.slider:before{transform:translateX(22px)}
+footer{padding:30px 0;color:var(--muted);text-align:center}
+
+.mini-profile{
+  display:flex;align-items:center;gap:9px;border:1px solid rgba(255,255,255,.18);
+  background:rgba(255,255,255,.08);color:#fff;border-radius:999px;padding:5px 12px 5px 6px;
+  cursor:pointer;transition:.2s ease;
+}
+.mini-profile:hover{background:rgba(255,255,255,.18);transform:translateY(-1px)}
+.mini-profile img{width:34px;height:34px;border-radius:50%;object-fit:cover;background:var(--green-300)}
+.mini-profile span{font-weight:500;max-width:150px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.next-card{
+  border:1px solid rgba(69,199,119,.35);
+  background:linear-gradient(135deg,var(--card),rgba(69,199,119,.11));
+}
+.countdown{font-size:.88rem;font-weight:700;color:var(--green-300);margin-top:8px}
+.fullscreen-notification{
+  position:fixed;inset:0;z-index:200;display:flex;align-items:center;justify-content:center;
+  padding:0;background:rgba(4,18,11,.94);backdrop-filter:blur(24px);
+  opacity:0;visibility:hidden;transition:.25s ease;
+}
+.fullscreen-notification.show{opacity:1;visibility:visible}
+.notification-card{
+  width:100%;height:100%;min-height:100vh;padding:clamp(40px,8vh,100px) 7vw;border-radius:0;text-align:center;color:white;
+  background:radial-gradient(circle at 50% 35%,rgba(69,199,119,.18),transparent 42%),linear-gradient(145deg,#071d12,#103b28);
+  border:0;box-shadow:none;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  transform:scale(.96);transition:.3s ease;
+}
+.fullscreen-notification.show .notification-card{transform:none}
+.notification-kicker{font-size:.78rem;letter-spacing:.16em;text-transform:uppercase;color:#bcebc9;font-weight:800}
+.notification-card h2{font-family:"Manrope",sans-serif;font-size:clamp(2.4rem,7vw,5.4rem);line-height:.95;margin:16px 0}
+.notification-card p{font-size:1.1rem;color:#e5f4e9}
+.dismiss-notification{
+  margin-top:32px;border:0;border-radius:999px;padding:16px 34px;font-size:1.05rem;
+  background:#f4f7ef;color:#103b28;font-weight:800;cursor:pointer;
+}
+.checkin-notification{
+  display:inline-block;margin-top:32px;margin-right:10px;border:0;border-radius:999px;padding:16px 38px;font-size:1.05rem;
+  background:#45c777;color:#082515;font-weight:900;text-decoration:none;cursor:pointer;
+}
+.notification-actions{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;}
+
+.calendar-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:20px}
+.calendar-weekdays span{color:#a9b9ae}.calendar-detail{background:rgba(16,38,26,.92)}
+.inline-change{border:0;background:var(--green-700);color:#fff;font-weight:800;padding:9px 13px;border-radius:12px;cursor:pointer;white-space:nowrap}.inline-change:hover{background:var(--green-800)}
+.week-setting{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:1rem}.week-setting .current-week{font-weight:700}
+.full-timetable-modal{width:min(1420px,97vw);height:min(90vh,920px);background:rgba(7,20,13,.98);color:#eef8f0;border:1px solid rgba(155,227,179,.16);border-radius:30px;box-shadow:0 30px 100px rgba(0,0,0,.55);overflow:hidden;display:flex;flex-direction:column}
+.full-timetable-head{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:22px 26px;border-bottom:1px solid rgba(155,227,179,.12)}
+.full-timetable-head h2{margin:0;font-family:"Manrope",sans-serif;font-size:clamp(1.5rem,3vw,2.2rem)}
+.full-timetable-head p{margin:4px 0 0;color:#9eb3a5;font-size:.88rem}
+.full-timetable-body{padding:22px;overflow:auto;display:block}
+.full-week{border:1px solid rgba(155,227,179,.13);border-radius:24px;padding:18px;background:rgba(16,38,26,.72);margin-bottom:18px;min-width:900px}
+.full-week-title{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}.full-week-title h3{margin:0;font-size:1.15rem}.full-week-title span{font-size:.68rem;letter-spacing:.12em;color:#9be3b3;font-weight:800}
+.full-grid{display:grid;grid-template-columns:110px repeat(5,minmax(145px,1fr));border:1px solid rgba(155,227,179,.11);border-radius:18px;overflow:hidden}
+.full-grid>div{padding:12px 10px;border-right:1px solid rgba(155,227,179,.08);border-bottom:1px solid rgba(155,227,179,.08);min-height:52px;display:flex;align-items:center}
+.full-grid>div:nth-child(6n){border-right:0}
+.full-grid .full-head{background:rgba(69,199,119,.10);font-weight:850;color:#dff4e5;justify-content:center}
+.full-grid .full-time{color:#82d89f;font-weight:850;white-space:nowrap;justify-content:center;font-size:.78rem}
+.full-grid .full-subject{color:#eaf7ed;justify-content:center;text-align:center;font-weight:650;font-size:.82rem}
+.full-grid .full-subject.free{color:#789083;font-weight:500}
+.full-grid .full-subject.lunch{color:#b8e8c6;font-weight:800}
+.event span{display:block;font-size:.72rem;color:var(--muted);margin-top:4px}
+.profile-file-btn{display:inline-flex;align-items:center;justify-content:center;border:0;background:var(--green-700);color:#fff;padding:11px 18px;border-radius:14px;font-weight:800;cursor:pointer}
+.profile-file-btn:hover{background:var(--green-800)}
+.profile-birthday{margin-top:18px}
+.profile-birthday input{margin-top:8px}
+.full-close{border:0;background:rgba(255,255,255,.07);color:#fff;border-radius:50%;width:40px;height:40px;font-size:1.4rem;cursor:pointer}
+@media(max-width:900px){.full-timetable-body{overflow-x:auto}}
+@media(max-width:620px){.full-timetable-modal{height:92vh;border-radius:24px}.full-week{min-width:820px}}
+.calendar-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:18px}
+.calendar-head h3{margin:0;font-size:1.35rem}
+.calendar-weekdays,.calendar-days{display:grid;grid-template-columns:repeat(7,1fr);gap:7px}
+.calendar-weekdays span{font-size:.72rem;text-align:center;color:var(--muted);font-weight:800;padding:7px 0}
+.calendar-day{min-height:48px;border:1px solid var(--border);border-radius:12px;background:var(--card);color:var(--text);font-weight:700}
+.calendar-day.muted{opacity:.38}.calendar-day.selected{outline:3px solid var(--green-500);outline-offset:1px}
+.calendar-day.simulated{box-shadow:inset 0 0 0 2px var(--green-700)}
+.calendar-day.today-real{background:rgba(69,199,119,.14)}
+.calendar-day.simulated{background:var(--green-700);color:#fff;box-shadow:none}
+.calendar-day.simulated.selected{outline:3px solid var(--green-300);outline-offset:1px}
+.calendar-detail h3{margin:8px 0 12px;font-size:1.5rem}.event-list{margin-top:22px;display:grid;gap:10px}.event{padding:13px 15px;border-radius:16px;background:rgba(69,199,119,.11);border:1px solid var(--border)}.event strong{display:block}.calendar-timetable{margin-top:22px;display:grid;gap:8px}.calendar-item{display:flex;justify-content:space-between;gap:12px;padding:10px 12px;border-radius:12px;background:rgba(16,59,40,.06)}.calendar-item span:last-child{font-weight:700;text-align:right}.full-panel{margin-top:18px;display:grid;grid-template-columns:1fr 1fr;gap:16px}.week-table{border:1px solid var(--border);border-radius:20px;padding:18px;background:var(--card)}.week-table h3{margin-top:0}.week-table .day-row{padding:9px 0;border-top:1px solid var(--border)}
+@media(max-width:760px){.calendar-grid,.full-panel{grid-template-columns:1fr}}
+@media(max-width:760px){
+  .nav{padding:10px 3vw}.navlinks button{padding:8px}.mini-profile span{display:none}.hero{min-height:65vh}
+  .quick,.schedule,.profile{grid-template-columns:1fr}.quick{margin-top:-35px}
+  .section-head{display:block}.section-head p{margin-top:8px}.hero-content{padding-bottom:55px}
+}
+.birthday-event span{font-size:.78rem;opacity:.72}
+.birthday-home{display:inline-flex;margin-top:14px;padding:10px 16px;border-radius:999px;background:rgba(69,199,119,.16);border:1px solid rgba(155,227,179,.25);color:#dff7e6;font-weight:850;font-size:.95rem}
+
+/* Color styles */
+[data-color-style="green"]{--c950:#071b11;--c900:#103b28;--c800:#174b32;--c700:#216342;--c500:#45c777;--c300:#9be3b3;--cream:#07140d;--card:rgba(16,38,26,.88);--border:rgba(155,227,179,.15);--muted:#a9b9ae}
+[data-color-style="brown"]{--c950:#17100c;--c900:#2a1b13;--c800:#43291c;--c700:#64402b;--c500:#a56a3a;--c300:#d6a477;--cream:#120b08;--card:rgba(43,27,19,.9);--border:rgba(214,164,119,.18);--muted:#b9a99f}
+[data-color-style="blue"]{--c950:#080f1c;--c900:#101d34;--c800:#172b4d;--c700:#23446f;--c500:#3d79bd;--c300:#8db8e8;--cream:#070d18;--card:rgba(16,29,52,.9);--border:rgba(141,184,232,.18);--muted:#a7b4c6}
+[data-color-style="red"]{--c950:#19090b;--c900:#321116;--c800:#4b171e;--c700:#6e242d;--c500:#b3434e;--c300:#e39aa1;--cream:#120709;--card:rgba(50,17,22,.9);--border:rgba(227,154,161,.18);--muted:#bfa5a8}
+[data-color-style="black"]{--c950:#050505;--c900:#101010;--c800:#181818;--c700:#242424;--c500:#505050;--c300:#a5a5a5;--cream:#050505;--card:rgba(16,16,16,.92);--border:rgba(165,165,165,.18);--muted:#aaa}
+
+/* Complete color-style system: every app UI surface, accent, border, panel, timetable,
+   notification, calendar, and control follows the selected style. */
+[data-color-style]{
+  --on-accent:#fff;
+  --nav-bg:color-mix(in srgb,var(--c950) 86%,transparent);
+  --hero-overlay:color-mix(in srgb,var(--c950) 83%,transparent);
+  --hero-overlay-mid:color-mix(in srgb,var(--c900) 34%,transparent);
+  --hero-bottom:color-mix(in srgb,var(--c950) 80%,transparent);
+  --table-overlay-1:color-mix(in srgb,var(--c950) 74%,transparent);
+  --table-overlay-2:color-mix(in srgb,var(--c900) 82%,transparent);
+  --lesson-bg:color-mix(in srgb,var(--c950) 92%,var(--c900));
+  --lesson-text:var(--text);
+  --break-bg:color-mix(in srgb,var(--c900) 90%,var(--c800));
+  --break-text:var(--c300);
+  --surface-deep:color-mix(in srgb,var(--c950) 96%,var(--c900));
+  --surface-mid:color-mix(in srgb,var(--c900) 88%,var(--c800));
+  --surface-soft:color-mix(in srgb,var(--c900) 72%,transparent);
+  --accent-soft:color-mix(in srgb,var(--c500) 11%,transparent);
+  --accent-faint:color-mix(in srgb,var(--c500) 16%,transparent);
+  --accent-border:color-mix(in srgb,var(--c300) 25%,transparent);
+  --accent-border-soft:color-mix(in srgb,var(--c300) 15%,transparent);
+  --modal-surface:color-mix(in srgb,var(--c950) 98%,var(--c900));
+  --modal-glow:color-mix(in srgb,var(--c500) 18%,transparent);
+  --muted-strong:color-mix(in srgb,var(--muted) 88%,var(--text));
+  --disabled:color-mix(in srgb,var(--muted) 78%,var(--c950));
+  --button-light:color-mix(in srgb,var(--text) 96%,var(--c300));
+  --button-light-text:var(--c900);
+}
+[data-color-style="green"]{--text:#eef8f0;--on-accent:#071b11}
+[data-color-style="brown"]{--text:#f6eee8;--on-accent:#17100c}
+[data-color-style="blue"]{--text:#edf4ff;--on-accent:#080f1c}
+[data-color-style="red"]{--text:#fff0f1;--on-accent:#19090b}
+[data-color-style="black"]{--text:#f2f2f2;--on-accent:#050505}
+
+body:before{background-image:linear-gradient(var(--hero-overlay),var(--hero-overlay)),url("https://t4.ftcdn.net/jpg/03/76/96/55/360_F_376965594_ChrglgrICleyWhVVG34STjEDWUy6gE8i.jpg")}
+.nav{background:var(--nav-bg)}
+.navlinks button,.settings-btn{color:var(--text)}
+.navlinks button.active,.navlinks button:hover,.settings-btn:hover{background:color-mix(in srgb,var(--c500) 18%,transparent)}
+.hero{background-image:linear-gradient(90deg,var(--hero-overlay),var(--hero-overlay-mid)),var(--hero-image)}
+.hero:after{background:linear-gradient(0deg,var(--hero-bottom),transparent 55%)}
+.hero-content{color:var(--text)}
+.eyebrow{color:var(--c300)}
+.hero p{color:var(--muted-strong)}
+.week-badge{color:var(--on-accent)}
+.days button{background:var(--card);color:var(--text)}
+.days button.current-today{background:var(--c700);color:var(--text);border-color:var(--c700)}
+.days button.current-today.day-selected{outline-color:var(--c300)}
+.timetable-wrap{background-image:linear-gradient(var(--table-overlay-1),var(--table-overlay-2)),var(--table-image)}
+.lesson{border-color:var(--accent-border-soft);background:var(--lesson-bg);color:var(--lesson-text)}
+.lesson:hover,.lesson.selected,.lesson:focus-visible{box-shadow:0 20px 45px color-mix(in srgb,var(--c950) 40%,transparent)}
+.lesson-time,.countdown{color:var(--c300)}
+.break{background:var(--break-bg);color:var(--break-text)}
+.save-btn,.inline-change,.profile-file-btn{background:var(--c700);color:var(--text)}
+.save-btn:hover,.inline-change:hover,.profile-file-btn:hover{background:var(--c800)}
+.toast{background:var(--c950);color:var(--text)}
+.notification-confirm{background:linear-gradient(145deg,var(--c950),var(--c900));color:var(--text);border-color:var(--accent-border-soft)}
+.notification-confirm p{color:var(--muted)}
+.notification-cancel{background:color-mix(in srgb,var(--text) 9%,transparent);color:var(--text)}
+.notification-disable{background:var(--c700);color:var(--text)}
+.settings{background:var(--cream);color:var(--text)}
+.close-btn{color:var(--text)}
+.slider{background:var(--disabled)}
+.switch input:checked+.slider{background:var(--c500)}
+.mini-profile{border-color:var(--accent-border-soft);background:color-mix(in srgb,var(--c500) 8%,transparent);color:var(--text)}
+.mini-profile:hover{background:color-mix(in srgb,var(--c500) 18%,transparent)}
+.next-card{border-color:color-mix(in srgb,var(--c500) 35%,transparent);background:linear-gradient(135deg,var(--card),var(--accent-soft))}
+.fullscreen-notification{background:color-mix(in srgb,var(--c950) 94%,transparent)}
+.notification-card{color:var(--text);background:radial-gradient(circle at 50% 35%,var(--modal-glow),transparent 42%),linear-gradient(145deg,var(--c950),var(--c900))}
+.notification-kicker{color:var(--c300)}
+.notification-card p{color:var(--muted-strong)}
+.dismiss-notification{background:var(--button-light);color:var(--button-light-text)}
+.checkin-notification{background:var(--c500);color:var(--on-accent)}
+.calendar-detail{background:var(--surface-mid)}
+.calendar-day{background:var(--card);color:var(--text)}
+.calendar-day.selected{outline-color:var(--c500)}
+.calendar-day.simulated{box-shadow:inset 0 0 0 2px var(--c700)}
+.calendar-day.today-real{background:var(--accent-faint)}
+.calendar-day.simulated{background:var(--c700);color:var(--text)}
+.calendar-day.simulated.selected{outline-color:var(--c300)}
+.event{background:var(--accent-soft);border-color:var(--border)}
+.calendar-item{background:color-mix(in srgb,var(--c900) 6%,transparent)}
+.full-timetable-modal{background:var(--modal-surface);color:var(--text);border-color:var(--accent-border-soft)}
+.full-timetable-head{border-color:var(--accent-border-soft)}
+.full-timetable-head p{color:var(--muted)}
+.full-week{border-color:var(--accent-border-soft);background:var(--surface-soft)}
+.full-grid{border-color:var(--accent-border-soft)}
+.full-grid>div{border-color:color-mix(in srgb,var(--c300) 8%,transparent)}
+.full-grid .full-head{background:var(--accent-soft);color:var(--text)}
+.full-grid .full-time{color:var(--c300)}
+.full-grid .full-subject{color:var(--text)}
+.full-grid .full-subject.free{color:var(--muted)}
+.full-grid .full-subject.lunch{color:var(--c300)}
+.full-close{background:color-mix(in srgb,var(--text) 7%,transparent);color:var(--text)}
+.birthday-home{background:var(--accent-faint);border-color:var(--accent-border);color:var(--text)}
+.avatar{background:var(--c300)}
+.profile input,.settings select{background:var(--card);color:var(--text)}
+.calendar-weekdays span{color:var(--muted)}
+
+
+/* Keep legacy green aliases synchronized with the selected style. */
+[data-color-style]{
+  --green-950:var(--c950);--green-900:var(--c900);--green-800:var(--c800);
+  --green-700:var(--c700);--green-500:var(--c500);--green-300:var(--c300);
+}
+.nav{color:var(--text)}
+.navlinks button,.settings-btn{color:var(--text)}
+.lesson{border-color:var(--accent-border-soft)}
+.full-close{color:var(--text)}
+.calendar-day.simulated{color:var(--text)}
+
+
+</style>
+</head>
+<body>
+<nav class="nav">
+  <div class="brand">Meik My Dei</div>
+  <div class="navlinks">
+    <button class="active" data-page="home">Home</button>
+    <button data-page="timetable">Timetable</button>
+    <button data-page="calendar">Calendar</button>
+    <button class="settings-btn" id="settingsBtn" aria-label="Settings">Settings</button>
+    <button class="mini-profile" id="miniProfile" aria-label="Open profile">
+      <img id="miniAvatar" alt="Profile">
+      <span id="miniName">Class 9C</span>
+    </button>
+  </div>
+</nav>
+
+<section id="homePage">
+  <section class="hero">
+    <div class="hero-content">
+      <div class="eyebrow">Class 9C · <span id="heroWeek">B Week</span></div>
+      <div id="birthdayHome" class="birthday-home" style="display:none">Happy Birthday!</div>
+      <h1>Your week, at a glance.</h1>
+      <p>Everything you need to know about your timetable, in one clear place.</p>
+    </div>
+  </section>
+  <main class="container">
+    <section class="quick">
+      <div class="card"><div class="label">Current lesson</div><div class="value" id="currentLesson">—</div></div>
+      <div class="card next-card"><div class="label">Next lesson</div><div class="value" id="nextLesson">—</div><div class="countdown" id="nextCountdown">—</div></div>
+      <div class="card"><div class="label">Time</div><div class="value" id="clock">—</div></div>
+    </section>
+  </main>
+</section>
+
+<section id="timetablePage" style="display:none">
+  <main class="container">
+    <div class="section-head">
+      <div><h2>Timetable <span class="week-badge" id="weekBadge">B WEEK</span></h2><p>Class 9C · <span id="timetableWeekText">B Week</span> · Lessons end 5 minutes before the next period.</p></div>
+    </div>
+    <div class="days" id="days"></div>
+    <div class="timetable-wrap"><div class="schedule" id="schedule"></div></div><button class="save-btn full-timetable-btn" id="fullToggle">Full Timetable</button>
+  </main>
+</section>
+
+<section id="calendarPage" style="display:none">
+  <main class="container">
+    <div class="section-head">
+      <div><h2>Calendar</h2><p>Choose a date to see its A/B week, timetable, and special events.</p></div>
+      <button class="save-btn" id="resetToday" style="margin:0">Use real today</button>
+    </div>
+    <div class="calendar-grid">
+      <div class="card">
+        <div class="calendar-head"><button class="close-btn" id="prevMonth">‹</button><h3 id="calendarMonth"></h3><button class="close-btn" id="nextMonth">›</button></div>
+        <div class="calendar-weekdays"><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span></div>
+        <div class="calendar-days" id="calendarDays"></div>
+      </div>
+      <div class="card calendar-detail">
+        <div class="label">Selected date</div>
+        <h3 id="selectedDateTitle">—</h3>
+        <div class="week-badge" id="selectedWeekBadge">—</div>
+        <button class="save-btn" id="setAsToday" style="margin-top:16px">Set this as Today</button>
+        <div id="calendarEvents" class="event-list"></div>
+        <div class="calendar-timetable" id="calendarTimetable"></div>
+      </div>
+    </div>
+  </main>
+</section>
+
+<section id="profilePage" style="display:none">
+  <main class="container">
+    <div class="section-head"><div><h2>Profile</h2><p>Change your name or profile image.</p></div></div>
+    <div class="profile">
+      <div class="card" style="text-align:center">
+        <img id="avatar" class="avatar" alt="Profile image">
+        <input id="photoInput" type="file" accept="image/*" hidden>
+        <button class="profile-file-btn" id="photoButton" type="button">Choose image</button>
+      </div>
+      <div class="card">
+        <div class="label">Your name</div>
+        <input id="nameInput" placeholder="Enter your name">
+        <div class="profile-birthday">
+          <div class="label">Birthday</div>
+          <input id="birthdayInput" type="date" aria-label="Birthday">
+        </div>
+        <button class="save-btn" id="saveProfile">Save profile</button>
+      </div>
+    </div>
+  </main>
+</section>
+
+<div class="modal-backdrop" id="fullTimetableModal">
+  <div class="full-timetable-modal" role="dialog" aria-modal="true" aria-label="Full timetable">
+    <div class="full-timetable-head">
+      <div><h2>Full Timetable</h2><p>Class 9C · A Week + B Week</p></div>
+      <button class="full-close" id="closeFullTimetable" aria-label="Close">×</button>
+    </div>
+    <div class="full-timetable-body" id="fullTimetable"></div>
+  </div>
+</div>
+
+<div class="fullscreen-notification" id="fullscreenNotification" role="alertdialog" aria-modal="true">
+  <div class="notification-card">
+    <div class="notification-kicker">Meik My Dei · Class 9C</div>
+    <h2 id="notificationSubject">Class starting</h2>
+    <p id="notificationMessage">Your lesson starts now.</p>
+    <div id="notificationActions"><button class="dismiss-notification" id="dismissNotification">Got it</button></div>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="settingsModal">
+  <div class="settings">
+    <div style="display:flex;justify-content:space-between;align-items:center">
+      <h2 style="margin:0">Settings</h2><button class="close-btn" id="closeSettings">×</button>
+    </div>
+    <div class="settings-row">
+      <div><strong>School week</strong></div>
+      <div class="week-setting"><span class="current-week" id="weekSettingStatus">You are currently in a B Week</span><button class="inline-change" id="changeWeek">Change</button></div>
+    </div>
+    <div class="settings-row">
+      <div><strong>Color style</strong><div class="label" style="margin-top:4px">Choose the main color style for Meik My Dei.</div></div>
+      <select id="colorStyleSelect" aria-label="Color style">
+        <option value="green">Green</option>
+        <option value="brown">Dark Brown</option>
+        <option value="blue">Dark Blue</option>
+        <option value="red">Dark Red</option>
+        <option value="black">Black</option>
+      </select>
+    </div>
+    <div class="settings-row">
+      <div><strong>Notification sound</strong><div class="label" style="margin-top:4px">Choose what plays when class starts.</div></div>
+      <select id="soundSelect">
+        <option value="bell">Bell</option>
+        <option value="chime">Chime</option>
+        <option value="digital">Digital</option>
+        <option value="soft">Soft</option>
+        <option value="off">Off</option>
+      </select>
+    </div>
+    <div class="settings-row">
+      <div><strong>Test sound</strong><div class="label" style="margin-top:4px">Preview your selected sound.</div></div>
+      <button class="save-btn" id="testSound" style="margin:0">Play</button>
+    </div>
+    <div class="settings-row">
+      <div><strong>Browser notifications</strong><div class="label" style="margin-top:4px">Allow class alerts from Meik My Dei.</div></div>
+      <button class="save-btn" id="enableNotifications" style="margin:0">Enable</button>
+    </div>
+    <div class="settings-row">
+      <div><strong>Test notification</strong><div class="label" id="notificationStatus" style="margin-top:4px">Checking notification system…</div></div>
+      <button class="save-btn" id="testNotification" style="margin:0">Test</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="notificationConfirmModal">
+  <div class="notification-confirm" role="dialog" aria-modal="true" aria-labelledby="notificationConfirmTitle">
+    <h3 id="notificationConfirmTitle">Are you sure you want to disable notifications?</h3>
+    <p>If you disable notifications, Meik My Dei will stop sending lesson reminders, lunch reminders, and other scheduled alerts until you enable them again.</p>
+    <div class="notification-confirm-actions">
+      <button class="notification-cancel" id="cancelNotificationDisable">Cancel</button>
+      <button class="notification-disable" id="confirmNotificationDisable">Disable</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+<footer>Meik My Dei · Class 9C</footer>
+
+<script>
+const timetables={
+A:{
+Monday:[["09:00","German"],["10:00","Mentor Check-in"],["11:00","English"],["12:00","Physics"],["13:00","LUNCH"],["14:30","Studio Time"],["15:30","Mathematics"]],
+Tuesday:[["09:00","Chemistry"],["10:00","Studio Time"],["11:00","Humanities"],["12:00","Mathematics"],["13:00","LUNCH"],["14:30","English"],["15:30","Design"]],
+Wednesday:[["09:00","Studio Time"],["10:00","Mathematics"],["11:00","Design"],["12:00","English"],["13:00","LUNCH"],["14:30","Humanities"],["15:30","German"]],
+Thursday:[["09:00","Studio Time"],["10:00","Studio Time"],["11:00","Mathematics"],["12:00","Studio Time"],["13:00","LUNCH"],["14:30","Chemistry"],["15:30","Physics"]],
+Friday:[["09:00","Studio Time"],["10:00","Studio Time"],["11:00","Design"],["12:00","Chemistry"],["13:00","LUNCH"],["14:30","Physics"],["15:30","German"]]
+},
+B:{
+Monday:[["09:00","Humanities"],["10:00","Mentor Check-in"],["11:00","English"],["12:00","Mathematics"],["13:00","LUNCH"],["14:30","Studio Time"],["15:30","Chemistry"]],
+Tuesday:[["09:00","German"],["10:00","Studio Time"],["11:00","Mathematics"],["12:00","Physics"],["13:00","LUNCH"],["14:30","Studio Time"],["15:30","Humanities"]],
+Wednesday:[["09:00","Studio Time"],["10:00","German"],["11:00","Studio Time"],["12:00","Chemistry"],["13:00","LUNCH"],["14:30","Design"],["15:30","Mathematics"]],
+Thursday:[["09:00","Studio Time"],["10:00","Studio Time"],["11:00","Physics"],["12:00","German"],["13:00","LUNCH"],["14:30","English"],["15:30","Studio Time"]],
+Friday:[["09:00","Physics"],["10:00","Studio Time"],["11:00","English"],["12:00","Studio Time"],["13:00","LUNCH"],["14:30","Chemistry"],["15:30","Mathematics"]]
+}
+};
+const days=["Monday","Tuesday","Wednesday","Thursday","Friday"];
+const ANCHOR_DATE=new Date(2026,9,5); // Monday, October 5, 2026 = B Week
+const $=id=>document.getElementById(id);
+function applyColorStyle(style){
+  const allowed=["green","brown","blue","red","black"];
+  if(!allowed.includes(style)) style="green";
+  document.documentElement.setAttribute("data-color-style",style);
+  localStorage.setItem("meikColorStyle",style);
+  const meta=document.querySelector('meta[name="theme-color"]');
+  const themeColors={green:"#174b32",brown:"#43291c",blue:"#172b4d",red:"#4b171e",black:"#181818"};
+  if(meta) meta.setAttribute("content",themeColors[style]);
+  const select=$("colorStyleSelect");
+  if(select) select.value=style;
+}
+function loadColorStyle(){applyColorStyle(localStorage.getItem("meikColorStyle")||"green")}
+loadColorStyle();
+let selectedDay=null;
+let calendarDate=new Date();
+let selectedCalendarDate=new Date();
+let lastReminderKey="",lastLunchReminder="",lastBirthdayNotificationKey="",alarmInterval=null,alarmContext=null;
+
+function realToday(){const d=new Date();d.setHours(0,0,0,0);return d}
+function appToday(){
+  const raw=localStorage.getItem("meikAppToday");
+  if(!raw)return realToday();
+  const d=new Date(raw+"T00:00:00");
+  return isNaN(d)?realToday():d;
+}
+function mondayOf(date){const d=new Date(date);d.setHours(0,0,0,0);const day=d.getDay();d.setDate(d.getDate()-(day===0?6:day-1));return d}
+function isoDate(d){return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`}
+function getSchoolWeek(date=appToday()){
+  const anchorRaw=localStorage.getItem("meikWeekAnchor");
+  const anchorWeek=localStorage.getItem("meikWeekAnchorType")||"B";
+  const anchor=anchorRaw?new Date(anchorRaw+"T00:00:00"):new Date(ANCHOR_DATE);
+  const targetMonday=mondayOf(date),anchorMonday=mondayOf(anchor);
+  const diff=Math.round((targetMonday-anchorMonday)/86400000);
+  const index=Math.floor(diff/7);
+  return ((index%2)+2)%2===0?anchorWeek:(anchorWeek==="A"?"B":"A");
+}
+function getTimetable(date=appToday()){return timetables[getSchoolWeek(date)]}
+function dateDayName(d){return d.toLocaleDateString("en-US",{weekday:"long"})}
+function isLastSaturday(d){return d.getDay()===6 && new Date(d.getFullYear(),d.getMonth()+1,0).getDate() - d.getDate() < 7}
+function specialEventsFor(date){
+  const events=[]; const day=date.getDay(); const week=getSchoolWeek(date);
+  const birthday=localStorage.getItem("meikBirthday")||"";
+  if(birthday){const parts=birthday.split("-").map(Number);if(parts.length===3 && parts[1]===date.getMonth()+1 && parts[2]===date.getDate())events.unshift(["Birthday","Happy birthday!","birthday"]);}
+  if(day===1) events.push(["14:30","School Assembly"]);
+  if(day===6){
+    if(isLastSaturday(date)){
+      events.push(["09:00–13:00","Umuganda"]);
+      events.push(["13:00–14:25","Lunch"]);
+      if(week==="A") events.push(["14:30–18:00","STEM"]);
+      else events.push(["14:30–18:00","Free Time"]);
+    }else if(week==="A"){
+      events.push(["09:00–13:00","Plus STEM"]);
+      events.push(["13:00–14:25","Lunch"]);
+      events.push(["14:30 onward","Free Time"]);
+    }
+  }
+  return events;
+}
+function setSelectedDayToAppToday(){const d=appToday();const n=d.getDay();selectedDay=n>=1&&n<=5?days[n-1]:"Monday"}
+function showPage(page){
+  ["home","timetable","calendar","profile"].forEach(p=>$(p+"Page").style.display=p===page?"block":"none");
+  document.querySelectorAll("[data-page]").forEach(b=>b.classList.toggle("active",b.dataset.page===page));
+  if(page!=="timetable") setSelectedDayToAppToday();
+  if(page==="timetable") renderTimetable();
+  if(page==="calendar"){
+    selectedCalendarDate=appToday();
+    calendarDate=new Date(selectedCalendarDate.getFullYear(),selectedCalendarDate.getMonth(),1);
+    renderCalendar();
+  }
+}
+document.querySelectorAll("[data-page]").forEach(b=>b.onclick=()=>showPage(b.dataset.page));
+function updateWeekUI(){
+  const week=getSchoolWeek();updateWeekSetting(); const label=`${week} Week`;
+  $("heroWeek").textContent=label;$("weekBadge").textContent=`${week} WEEK`;$("timetableWeekText").textContent=label;
+}
+function renderDays(){
+  const today=appToday();
+  const todayName=(today.getDay()>=1&&today.getDay()<=5)?days[today.getDay()-1]:null;
+  $("days").innerHTML=days.map(d=>{
+    const isToday=d===todayName;
+    const isSelected=d===selectedDay;
+    return `<button class="${isToday?"current-today ":""}${isSelected?"day-selected":""}" data-day="${d}">${d}</button>`;
+  }).join("");
+  document.querySelectorAll("[data-day]").forEach(b=>b.onclick=()=>{selectedDay=b.dataset.day;renderDays();renderTimetable()});
+}
+function renderTimetable(){
+  updateWeekUI();renderDays();
+  $("schedule").innerHTML=getTimetable()[selectedDay].map(([time,subject],i)=>{
+    if(subject==="—") return `<article class="lesson break" tabindex="0"><div class="lesson-time">${time}</div><h3>Free Period</h3><div class="lesson-details">No scheduled class.</div></article>`;
+    const special=subject==="LUNCH"||subject==="Studio Time";
+    return `<article class="lesson ${special?"break":""}" tabindex="0"><div class="lesson-time">${time}</div><h3>${subject}</h3><div class="lesson-details">${subject==="LUNCH"?"Lunch period · lunch reminder is at 13:25.":subject==="Studio Time"?"Studio time":"Class period for Class 9C."}</div></article>`;
+  }).join("");
+  document.querySelectorAll(".lesson").forEach(card=>{const toggle=()=>card.classList.toggle("selected");card.onclick=toggle;card.onkeydown=e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();toggle()}}});
+  renderFullTimetable();
+}
+function renderFullTimetable(){
+  const holder=$("fullTimetable");if(!holder)return;
+  const rows=[
+    ["09:00","09:00–09:55"],["10:00","10:00–10:55"],["11:00","11:00–11:55"],["12:00","12:00–12:55"],
+    ["13:00","13:00–14:25"],["14:30","14:30–15:25"],["15:30","15:30–16:25"]
+  ];
+  const subjectFor=(week,day,time)=>{const found=timetables[week][day].find(x=>x[0]===time);return found?found[1]:"—"};
+  const makeWeek=(week)=>{
+    let html=`<section class="full-week"><div class="full-week-title"><h3>${week} Week</h3><span>CLASS 9C</span></div><div class="full-grid"><div class="full-head">Time</div>${days.map(d=>`<div class="full-head">${d}</div>`).join("")}`;
+    rows.forEach(([time,range])=>{
+      html+=`<div class="full-time" title="${range}">${range}</div>`;
+      days.forEach(day=>{
+        const subject=subjectFor(week,day,time);
+        html+=`<div class="full-subject ${subject==="—"?"free":""} ${subject==="LUNCH"?"lunch":""}">${subject==="—"?"Free":subject}</div>`;
+      });
+    });
+    return html+`</div></section>`;
+  };
+  holder.innerHTML=makeWeek("A")+makeWeek("B");
+}
+$("fullToggle")?.addEventListener("click",()=>{$("fullTimetableModal").classList.add("open");renderFullTimetable()});
+$("closeFullTimetable")?.addEventListener("click",()=>$("fullTimetableModal").classList.remove("open"));
+$("fullTimetableModal")?.addEventListener("click",e=>{if(e.target===$("fullTimetableModal"))$("fullTimetableModal").classList.remove("open")});
+document.addEventListener("keydown",e=>{if(e.key==="Escape"){$("fullTimetableModal")?.classList.remove("open");$("settingsModal")?.classList.remove("open");$("notificationConfirmModal")?.classList.remove("open")}});
+function minutesFromTime(t){const [h,m]=t.split(":").map(Number);return h*60+m}
+function formatRemaining(ms){if(ms<=0)return "Starting now";const total=Math.ceil(ms/1000),h=Math.floor(total/3600),m=Math.floor(total%3600/60),s=total%60;if(h)return `${h}h ${m}m ${s}s`;if(m)return `${m}m ${s}s`;return `${s}s`}
+function getAllItems(day,date=appToday()){return getTimetable(date)[day].map(([t,s])=>({t,s,m:minutesFromTime(t)})).filter(x=>x.s!=="—")}
+function getCurrentAndNext(now,day,date=appToday()){
+  const mins=now.getHours()*60+now.getMinutes()+now.getSeconds()/60,all=getAllItems(day,date);let current=null,next=null;
+  for(let i=0;i<all.length;i++){const item=all[i],nextStart=all[i+1]?.m;
+    if(item.s==="LUNCH"){if(mins>=item.m&&mins<14*60+25){current=item;next=all[i+1]||null;break}continue}
+    const end=nextStart!==undefined?nextStart-5:16*60+25;
+    if(mins>=item.m&&mins<end){current=item;next=all[i+1]||null;break}
+    if(item.m>mins&&!next)next=item;
+  }
+  if(!current&&!next) next=all.find(x=>x.m>mins)||null;return {current,next};
+}
+function makeDateForTime(now,time){const d=new Date(now);const [h,m]=time.split(":").map(Number);d.setHours(h,m,0,0);return d}
+function getReminderDate(now,lesson){const d=makeDateForTime(now,lesson.t);d.setMinutes(d.getMinutes()-5);return d}
+function tick(){
+  const now=new Date();updateWeekUI();$("clock").textContent=now.toLocaleTimeString([], {hour:"2-digit",minute:"2-digit",second:"2-digit"});
+  const base=appToday(), day=days[base.getDay()-1];
+  if(!day){$("currentLesson").textContent="Weekend";$("nextLesson").textContent="Monday · 09:00";$("nextCountdown").textContent="Next school day";return}
+  const {current,next}=getCurrentAndNext(now,day,base);$("currentLesson").textContent=current?`${current.s} · ${current.t}`:"—";$("nextLesson").textContent=next?`${next.s} · ${next.t}`:"No more lessons";
+  if(next){const reminderDate=next.s==="LUNCH"?makeDateForTime(now,"13:25"):getReminderDate(now,next);$("nextCountdown").textContent=`${next.s==="LUNCH"?"Lunch reminder":"Reminder in"}: ${formatRemaining(reminderDate-now)}`}else $("nextCountdown").textContent="School day finished";
+  checkScheduledReminders(now,day,base);
+  checkBirthdayNotification();
+}
+function checkScheduledReminders(now,day,base){
+  const items=getAllItems(day,base);
+  for(const item of items){if(item.s==="LUNCH")continue;const reminderDate=getReminderDate(now,item),lessonDate=makeDateForTime(now,item.t),key=`${now.toDateString()}|${item.t}|${item.s}`;if(now>=reminderDate&&now<lessonDate&&lastReminderKey!==key){lastReminderKey=key;notifyClass(item.s,item.t,false);break}}
+  const lunchKey=now.toDateString();if(now.getHours()===13&&now.getMinutes()===25&&lastLunchReminder!==lunchKey){lastLunchReminder=lunchKey;notifyClass("Lunch","13:25",true)}
+}
+setInterval(tick,1000);tick();
+function toast(message){$("toast").textContent=message;$("toast").classList.add("show");clearTimeout(window.toastTimer);window.toastTimer=setTimeout(()=>$("toast").classList.remove("show"),5000)}
+function playSound(type=localStorage.getItem("meikSound")||"bell"){if(type==="off")return;const AC=window.AudioContext||window.webkitAudioContext;if(!AC)return;if(!alarmContext)alarmContext=new AC();const ctx=alarmContext;if(ctx.state==="suspended")ctx.resume().catch(()=>{});const notes={bell:[523.25,659.25,783.99],chime:[659.25,783.99,1046.5],digital:[880,0,880],soft:[392,493.88,587.33]}[type]||[523.25,659.25,783.99],now=ctx.currentTime;notes.forEach((freq,i)=>{if(!freq)return;const o=ctx.createOscillator(),g=ctx.createGain();o.type=type==="digital"?"square":"sine";o.frequency.value=freq;o.connect(g);g.connect(ctx.destination);const st=now+i*.16;g.gain.setValueAtTime(.0001,st);g.gain.exponentialRampToValueAtTime(type==="soft"?.07:.13,st+.015);g.gain.exponentialRampToValueAtTime(.0001,st+.32);o.start(st);o.stop(st+.34)})}
+function startRepeatingAlarm(){stopRepeatingAlarm();if((localStorage.getItem("meikSound")||"bell")==="off")return;playSound();alarmInterval=setInterval(()=>playSound(),1800)}
+function stopRepeatingAlarm(){if(alarmInterval){clearInterval(alarmInterval);alarmInterval=null}}
+function showFullscreenNotification(subject,time,isLunch=false){const isStudio=subject==="Studio Time";$("notificationSubject").textContent="Reminder";$("notificationMessage").textContent=isLunch?"Lunch reminder — it is 1:25 PM.":`Time for rotation, ${subject} is next, and it's 5 minutes from now.`;const actions=$("notificationActions");actions.innerHTML=isStudio?`<a class="checkin-notification" href="https://studiotimetracker.lovable.app/dashboard" target="_blank" rel="noopener">Check in</a><button class="dismiss-notification" id="dismissNotification">Turn off alarm</button>`:`<button class="dismiss-notification" id="dismissNotification">Turn off alarm</button>`;$("dismissNotification").onclick=closeFullscreenNotification;$("fullscreenNotification").classList.add("show")}
+function closeFullscreenNotification(){stopRepeatingAlarm();$("fullscreenNotification").classList.remove("show")}
+function isBirthdayToday(date=appToday()){const birthday=localStorage.getItem("meikBirthday")||"";if(!birthday)return false;const parts=birthday.split("-").map(Number);return parts.length===3&&parts[1]===date.getMonth()+1&&parts[2]===date.getDate();}
+function updateBirthdayHome(){const el=$("birthdayHome");if(!el)return;const name=localStorage.getItem("meikName")||"";el.textContent=name&&name!=="Class 9C"?`Happy Birthday, ${name}!`:`Happy Birthday!`;el.style.display=isBirthdayToday()?"inline-flex":"none";}
+function showBirthdayNotification(){const name=localStorage.getItem("meikName")||"";const message=name&&name!=="Class 9C"?`Happy birthday, ${name}! Have a great day.`:"Happy birthday! Have a great day.";$("notificationSubject").textContent="Happy Birthday!";$("notificationMessage").textContent=message;$("notificationActions").innerHTML=`<button class="dismiss-notification" id="dismissNotification">Thank you</button>`;$("dismissNotification").onclick=closeFullscreenNotification;$("fullscreenNotification").classList.add("show");startRepeatingAlarm();sendNativeNotification("Happy Birthday!",message);}
+function checkBirthdayNotification(){updateBirthdayHome();if(!isBirthdayToday())return;const key=isoDate(appToday());if(lastBirthdayNotificationKey!==key){lastBirthdayNotificationKey=key;showBirthdayNotification();}}
+async function getNotificationRegistration(){
+  if(!("serviceWorker" in navigator)) throw new Error("Service workers are not supported by this browser.");
+  const reg=await navigator.serviceWorker.register("./sw.js",{updateViaCache:"none"});
+  await reg.update().catch(()=>{});
+  return await navigator.serviceWorker.ready;
+}
+function notificationEnvironment(){
+  const secure=window.isSecureContext || location.protocol==="https:" || location.hostname==="localhost";
+  const permission="Notification" in window?Notification.permission:"unsupported";
+  return {secure,permission,sw:"serviceWorker" in navigator};
+}
+function updateNotificationStatus(message){const el=$("notificationStatus");if(el)el.textContent=message}
+async function refreshNotificationStatus(){
+  const e=notificationEnvironment();
+  if(!e.sw){updateNotificationStatus("Service workers are not supported on this browser.");return}
+  if(!e.secure){updateNotificationStatus("Open the hosted HTTPS version of Meik My Dei; local files cannot run browser notifications.");return}
+  if(e.permission==="denied"){updateNotificationStatus("Blocked. Allow notifications for this site in Chromebook site settings.");return}
+  if(e.permission==="granted"){
+    try{await getNotificationRegistration();updateNotificationStatus("Ready — notifications are allowed and the service worker is active.")}
+    catch(err){updateNotificationStatus("Permission is allowed, but the notification service could not start.")}
+    return;
+  }
+  updateNotificationStatus("Not enabled yet. Press Enable, then use Test.");
+}
+async function sendNativeNotification(title,message,options={}){
+  if(!("Notification" in window) || Notification.permission!=="granted") return false;
+  try{
+    const reg=await getNotificationRegistration();
+    await reg.showNotification(title,{body:message,silent:false,requireInteraction:true,...options});
+    return true;
+  }catch(err){
+    try{new Notification(title,{body:message,silent:false});return true}catch(e){}
+    return false;
+  }
+}
+function notifyClass(subject,time,isLunch=false){
+  if(!notificationsAreEnabled()) return;
+  const isStudio=subject==="Studio Time",title="Reminder",message=isLunch?"Lunch reminder — it is 1:25 PM.":`Time for rotation, ${subject} is next, and it's 5 minutes from now.`;
+  toast(message);showFullscreenNotification(subject,time,isLunch);startRepeatingAlarm();
+  sendNativeNotification(title,message,{data:{url:isStudio?"https://studiotimetracker.lovable.app/dashboard":"./index.html"},actions:isStudio?[{action:"checkin",title:"Check in"}]:[]});
+}
+function notificationsAreEnabled(){
+  if(!("Notification" in window)) return false;
+  const saved=localStorage.getItem("meikNotificationsEnabled");
+  return saved==="true" && Notification.permission==="granted";
+}
+function loadSettings(){$("soundSelect").value=localStorage.getItem("meikSound")||"bell";updateWeekSetting();updateNotificationButton();refreshNotificationStatus()}
+function updateNotificationButton(){
+  const btn=$("enableNotifications"); if(!btn)return;
+  btn.textContent=notificationsAreEnabled()?"Enabled":"Enable";
+}
+function loadSettings(){$("soundSelect").value=localStorage.getItem("meikSound")||"bell";updateWeekSetting();updateNotificationButton()}
+function updateNotificationButton(){
+  const btn=$("enableNotifications"); if(!btn)return;
+  btn.textContent=notificationsAreEnabled()?"Enabled":"Enable";
+}
+$("settingsBtn").onclick=()=>{$("settingsModal").classList.add("open");loadSettings()};
+$("closeSettings").onclick=()=>$("settingsModal").classList.remove("open");
+function updateWeekSetting(){const w=getSchoolWeek();const el=$("weekSettingStatus");if(el)el.textContent=`You are currently in a ${w} Week`;const change=$("changeWeek");if(change){change.onclick=()=>setWeekAnchor(w==="A"?"B":"A")}}
+function setWeekAnchor(type){const d=mondayOf(appToday());localStorage.setItem("meikWeekAnchor",isoDate(d));localStorage.setItem("meikWeekAnchorType",type);toast(`This week is now set as ${type} Week.`);updateWeekSetting();renderTimetable();renderCalendar();tick()}
+$("soundSelect").onchange=e=>localStorage.setItem("meikSound",e.target.value);$("testSound").onclick=()=>playSound($("soundSelect").value);
+$("enableNotifications").onclick=async()=>{
+  if(!("Notification" in window)){toast("This browser does not support notifications.");return}
+  if(notificationsAreEnabled()){
+    $("notificationConfirmModal").classList.add("open");
+    return;
+  }
+  const env=notificationEnvironment();
+  if(!env.secure){
+    toast("Notifications need the hosted HTTPS version of Meik My Dei. Local files cannot enable them.");
+    updateNotificationStatus("Use the HTTPS website/PWA version, not a downloaded index.html file.");
+    return;
+  }
+  if(Notification.permission==="denied"){
+    toast("Notifications are blocked for this site. Allow them in Chromebook site settings, then try again.");
+    updateNotificationStatus("Blocked by Chrome. Allow notifications for this site, then press Enable again.");
+    return;
+  }
+  try{await getNotificationRegistration()}catch(err){toast("The notification service could not start. Make sure the site is hosted over HTTPS.");updateNotificationStatus("Service worker error: "+(err.message||"unknown error"));return}
+  let permission=Notification.permission;
+  if(permission==="default") permission=await Notification.requestPermission();
+  if(permission==="granted"){
+    localStorage.setItem("meikNotificationsEnabled","true");
+    updateNotificationButton();
+    updateNotificationStatus("Ready — notifications are enabled.");
+    toast("Notifications enabled. Press Test to check them now.");
+  }else{
+    localStorage.setItem("meikNotificationsEnabled","false");
+    updateNotificationButton();
+    updateNotificationStatus("Notifications were not enabled.");
+    toast("Notifications were not enabled.");
+  }
+};
+$("testNotification").onclick=async()=>{
+  if(!notificationsAreEnabled()){
+    toast("Enable notifications first.");
+    updateNotificationStatus("Press Enable first, then Test.");
+    return;
+  }
+  const ok=await sendNativeNotification("Reminder","Meik My Dei notifications are working.");
+  if(ok){toast("Test notification sent.");updateNotificationStatus("Success — a test notification was sent.")}
+  else{toast("The test notification could not be sent.");updateNotificationStatus("The browser permission is enabled, but Chrome did not accept the notification. Refresh the hosted page and try again.")}
+};
+$("cancelNotificationDisable").onclick=()=>$("notificationConfirmModal").classList.remove("open");
+$("confirmNotificationDisable").onclick=()=>{
+  localStorage.setItem("meikNotificationsEnabled","false");
+  stopRepeatingAlarm();
+  $("notificationConfirmModal").classList.remove("open");
+  updateNotificationButton();
+  toast("Notifications disabled. You can enable them again anytime.");
+};
+$("notificationConfirmModal").onclick=e=>{if(e.target===$("notificationConfirmModal"))$("notificationConfirmModal").classList.remove("open")};
+
+function defaultAvatar(){const svg=`<svg xmlns="http://www.w3.org/2000/svg" width="300" height="300"><rect width="100%" height="100%" rx="150" fill="#45c777"/><circle cx="150" cy="112" r="55" fill="#f4f7ef"/><path d="M55 270c12-65 54-92 95-92s83 27 95 92" fill="#f4f7ef"/></svg>`;return "data:image/svg+xml;base64,"+btoa(svg)}
+function loadProfile(){
+  const name=localStorage.getItem("meikName")||"Class 9C",avatar=localStorage.getItem("meikAvatar")||defaultAvatar(),birthday=localStorage.getItem("meikBirthday")||"";
+  $("nameInput").value=name;$("birthdayInput").value=birthday;$("avatar").src=avatar;$("miniName").textContent=name;$("miniAvatar").src=avatar;
+  $("photoButton").textContent=localStorage.getItem("meikAvatar")?"Change image":"Choose image";
+  updateBirthdayHome();
+}
+$("colorStyleSelect").onchange=()=>applyColorStyle($("colorStyleSelect").value);
+$("saveProfile").onclick=()=>{localStorage.setItem("meikName",$("nameInput").value.trim()||"Class 9C");localStorage.setItem("meikBirthday",$("birthdayInput").value||"");lastBirthdayNotificationKey="";loadProfile();renderCalendar();updateBirthdayHome();checkBirthdayNotification();toast("Profile saved.")};
+$("photoButton").onclick=()=>$("photoInput").click();
+$("photoInput").onchange=e=>{const file=e.target.files[0];if(!file)return;const reader=new FileReader();reader.onload=()=>{localStorage.setItem("meikAvatar",reader.result);loadProfile();toast("Profile image updated.")};reader.readAsDataURL(file)};
+$("miniProfile").onclick=()=>showPage("profile");
+function renderCalendar(){const y=calendarDate.getFullYear(),m=calendarDate.getMonth();$("calendarMonth").textContent=calendarDate.toLocaleDateString("en-US",{month:"long",year:"numeric"});const first=new Date(y,m,1),offset=(first.getDay()+6)%7,total=new Date(y,m+1,0).getDate();let html="";for(let i=0;i<offset;i++)html+=`<button class="calendar-day muted" disabled></button>`;for(let day=1;day<=total;day++){const d=new Date(y,m,day),sel=isoDate(d)===isoDate(selectedCalendarDate),sim=isoDate(d)===isoDate(appToday()),real=isoDate(d)===isoDate(realToday());html+=`<button class="calendar-day ${sel?"selected":""} ${sim?"simulated":""} ${real?"today-real":""}" data-date="${isoDate(d)}">${day}</button>`}$("calendarDays").innerHTML=html;document.querySelectorAll("[data-date]").forEach(b=>b.onclick=()=>{selectedCalendarDate=new Date(b.dataset.date+"T00:00:00");renderCalendarDetail();renderCalendar()});renderCalendarDetail()}
+function renderCalendarDetail(){const d=selectedCalendarDate,w=getSchoolWeek(d);$("selectedDateTitle").textContent=d.toLocaleDateString("en-US",{weekday:"long",month:"long",day:"numeric",year:"numeric"});$("selectedWeekBadge").textContent=`${w} WEEK`;const events=specialEventsFor(d);$("calendarEvents").innerHTML=events.length?`<div class="label" style="margin-bottom:8px">Special events</div>`+events.map(e=>`<div class="event${e[2]==="birthday"?" birthday-event":""}"><strong>${e[1]}</strong><span>${e[0]}</span></div>`).join(""):`<div class="label" style="margin-top:22px">No special events.</div>`;const dayName=dateDayName(d);const items=days.includes(dayName)?getTimetable(d)[dayName]:[];$("calendarTimetable").innerHTML=items.length?`<div class="label" style="margin-bottom:8px">Timetable</div>`+items.map(x=>`<div class="calendar-item"><span>${x[0]}</span><span>${x[1]==="—"?"Free Period":x[1]}</span></div>`).join(""):`<div class="label" style="margin-top:22px">No weekday timetable.</div>`}
+$("prevMonth").onclick=()=>{calendarDate.setMonth(calendarDate.getMonth()-1);renderCalendar()};$("nextMonth").onclick=()=>{calendarDate.setMonth(calendarDate.getMonth()+1);renderCalendar()};$("setAsToday").onclick=()=>{
+  localStorage.setItem("meikAppToday",isoDate(selectedCalendarDate));
+  selectedCalendarDate=appToday();
+  calendarDate=new Date(selectedCalendarDate.getFullYear(),selectedCalendarDate.getMonth(),1);
+  setSelectedDayToAppToday();
+  renderCalendar();renderTimetable();tick();
+  toast(`Meik My Dei is now using ${selectedCalendarDate.toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"})} as Today.`);
+};
+$("resetToday").onclick=()=>{localStorage.removeItem("meikAppToday");selectedCalendarDate=realToday();calendarDate=new Date(selectedCalendarDate.getFullYear(),selectedCalendarDate.getMonth(),1);setSelectedDayToAppToday();renderCalendar();renderTimetable();tick();toast("Meik My Dei is back to the real date.")};
+loadSettings();loadProfile();selectedCalendarDate=appToday();calendarDate=new Date(selectedCalendarDate.getFullYear(),selectedCalendarDate.getMonth(),1);setSelectedDayToAppToday();renderTimetable();renderCalendar();
+let deferredInstallPrompt=null;window.addEventListener("beforeinstallprompt",e=>{e.preventDefault();deferredInstallPrompt=e});window.addEventListener("appinstalled",()=>{deferredInstallPrompt=null;toast("Meik My Dei installed as an app.")});if("serviceWorker" in navigator){getNotificationRegistration().catch(()=>{});}
+refreshNotificationStatus();
+</script>
+</body>
+</html>
